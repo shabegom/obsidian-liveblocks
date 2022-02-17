@@ -1,0 +1,11 @@
+
+.cm-live-cursor {
+  width: 2px;
+  background: #ff00ff;
+  color: #ff00ff;
+}
+
+.cm-live-cursor:before {
+  content: "";
+}
+

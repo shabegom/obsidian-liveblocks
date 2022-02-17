@@ -1,0 +1,10 @@
+{
+	"id": "live-blocks",
+	"name": "Live Blocks",
+	"version": "1.0.0",
+	"minAppVersion": "0.12.0",
+	"description": "Live Blocks Prototype",
+	"author": "shabegom",
+	"authorUrl": "https://shbgm.ca",
+	"isDesktopOnly": false
+}
