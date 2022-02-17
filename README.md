@@ -6,7 +6,7 @@ A POC implementation of liveblocks.io inside an obsidian plugin.
 ### Install
 1. Create an account at https://liveblocks.io
 2. Grab you API Key: https://liveblocks.io/dashboard/apikeys
-3. Clone the repo and create a `.env` file and add `API_KEY= Key from liveblocks`
+3. Clone the repo and add your API key to a `.env` file.
 4. npm run build and copy `main.js`, `styles.css` and `manifest.json` into your obsidian plugins folder
 5. Enable the plugin in obsidian
 

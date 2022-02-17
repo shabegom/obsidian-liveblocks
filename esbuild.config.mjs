@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from 'builtin-modules'
+import env from '@intrnl/esbuild-plugin-env'
 
 const banner =
 `/*
@@ -49,4 +50,5 @@ esbuild.build({
 	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
 	outfile: 'main.js',
+	plugins: [env({})],
 }).catch(() => process.exit(1));

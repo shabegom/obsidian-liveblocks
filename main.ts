@@ -1,6 +1,5 @@
-import "dotenv/config.js";
 import { Plugin } from "obsidian";
-import { createClient } from "@liveblocks/client";
+import { createClient, Room, Client } from "@liveblocks/client";
 import {
   Decoration,
   DecorationSet,
@@ -10,18 +9,21 @@ import {
 
 export default class LiveBlocks extends Plugin {
   users: { presence?: { offset?: number } }[] = [];
+  presence: string;
+  room: Room;
+  client: Client;
   async onload() {
     // get an API key from liveblocks.io
-    const client = createClient({
+    this.client = createClient({
       publicApiKey: process.env.API_KEY,
     })
-    const room = client.enter("liveblocks-test");
+    this.room = this.client.enter("liveblocks-test");
     let text: string;
     // get the object from storageblock
-    const { root } = await room.getStorage();
+    const { root } = await this.room.getStorage();
 
     // just a basic example of subscribing to update to block storage
-    room.subscribe(root, (updates) => {
+    this.room.subscribe(root, (updates) => {
       console.log(updates.toObject());
       const object: { source?: string } = updates.toObject();
       if (object.source) {
@@ -33,9 +35,17 @@ export default class LiveBlocks extends Plugin {
     });
 
     // subscribe to presence updates and store them in this.users
-    room.subscribe("others", (others) => {
+    this.room.subscribe("others", (others) => {
       console.log(Array.from(others));
       this.users = Array.from(others);
+        if (others.count === 0) {
+          this.presence  = "You're the only one here.";
+        } else if (others.count === 1) {
+          this.presence = "There is one other person here.";
+        } else {
+          this.presence = "There are " + others.count +
+            " other people here.";
+        }
     });
 
     // listen to editor change events and update a user's presence with their cursor position
@@ -43,7 +53,7 @@ export default class LiveBlocks extends Plugin {
       this.app.workspace.on("editor-change", (editor) => {
         const cursor = editor.getCursor();
         const offset = editor.posToOffset(cursor);
-        room.updatePresence({ offset });
+        this.room.updatePresence({ offset });
       }),
     );
 
@@ -58,20 +68,12 @@ export default class LiveBlocks extends Plugin {
       
       // putting the number of users into the render output of the codeblock
       const div = document.createElement("div");
-      const present = document.createElement("div");
-      room.subscribe("others", (others) => {
-        if (others.count === 0) {
-          present.innerHTML = "You're the only one here.";
-        } else if (others.count === 1) {
-          present.innerHTML = "There is one other person here.";
-        } else {
-          present.innerHTML = "There are " + others.count +
-            " other people here.";
-        }
-      });
-      div.appendChild(present);
+      div.innerText = this.presence;
       el.appendChild(div);
     });
+  }
+  onunload() {
+    this.client.leave('liveblocks-test');
   }
 }
 
