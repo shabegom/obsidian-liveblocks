@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"cp": "cp ./main.js ~/plugin-development/.obsidian/plugins/live-blocks"
+		"cp": "cp ./main.js ~/plugin-development/.obsidian/plugins/live-blocks",
+		"scp": "./main.js sammorrison@100.107.100.17:~/development/.obsidian/plugins/live-blocks"
 	},
 	"keywords": [],
 	"author": "",
